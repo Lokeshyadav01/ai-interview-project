@@ -1,52 +1,59 @@
-def analyze_resume(resume_text: str):
+import re
+
+
+TECH_SKILLS = {
+    "python",
+    "java",
+    "c++",
+    "javascript",
+    "react",
+    "node",
+    "fastapi",
+    "django",
+    "flask",
+    "sql",
+    "postgresql",
+    "mongodb",
+    "docker",
+    "git",
+    "github",
+    "aws",
+    "azure",
+    "tensorflow",
+    "pytorch",
+    "machine learning",
+    "deep learning",
+    "data science",
+    "html",
+    "css",
+}
+
+
+def analyze_resume(text: str):
     """
-    Analyze the resume and return basic AI-style insights.
+    Basic AI resume analysis.
     """
 
-    words = resume_text.split()
+    resume = text.lower()
 
-    total_words = len(words)
+    found_skills = []
 
-    sections = []
+    missing_skills = []
 
-    resume_lower = resume_text.lower()
+    for skill in TECH_SKILLS:
 
-    if "education" in resume_lower:
-        sections.append("Education")
+        if re.search(re.escape(skill), resume):
+            found_skills.append(skill)
 
-    if "experience" in resume_lower:
-        sections.append("Experience")
+        else:
+            missing_skills.append(skill)
 
-    if "project" in resume_lower:
-        sections.append("Projects")
-
-    if "skill" in resume_lower:
-        sections.append("Skills")
-
-    suggestions = []
-
-    if total_words < 250:
-        suggestions.append(
-            "Resume is too short. Add more project and experience details."
-        )
-
-    if "github" not in resume_lower:
-        suggestions.append(
-            "Add your GitHub profile."
-        )
-
-    if "linkedin" not in resume_lower:
-        suggestions.append(
-            "Add your LinkedIn profile."
-        )
-
-    if "docker" not in resume_lower:
-        suggestions.append(
-            "Learning Docker will improve backend opportunities."
-        )
+    score = int(
+        (len(found_skills) / len(TECH_SKILLS)) * 100
+    )
 
     return {
-        "word_count": total_words,
-        "sections_found": sections,
-        "suggestions": suggestions
+        "ats_score": score,
+        "found_skills": sorted(found_skills),
+        "missing_skills": sorted(missing_skills),
     }

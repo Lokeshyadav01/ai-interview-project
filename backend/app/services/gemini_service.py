@@ -1,4 +1,8 @@
 from google import genai
+from app.config import settings
+
+print("API Key Loaded:", bool(settings.GEMINI_API_KEY))
+print("API Key Prefix:", settings.GEMINI_API_KEY[:8])
 
 from app.config import settings
 

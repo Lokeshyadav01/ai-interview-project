@@ -15,7 +15,6 @@ from app.auth.hashing import (
 )
 from app.auth.jwt_handler import create_access_token
 
-
 router = APIRouter(
     prefix="/auth",
     tags=["Authentication"],
@@ -31,10 +30,6 @@ def register_user(
     user: UserCreate,
     db: Session = Depends(get_db),
 ):
-    """
-    Register a new user.
-    """
-
     # Check if email already exists
     existing_user = (
         db.query(User)
@@ -71,10 +66,7 @@ def login_user(
     user: UserLogin,
     db: Session = Depends(get_db),
 ):
-    """
-    Login user and return JWT access token.
-    """
-
+    # Find user by email
     db_user = (
         db.query(User)
         .filter(User.email == user.email)
@@ -82,15 +74,28 @@ def login_user(
     )
 
     if not db_user:
+        print("User not found:", user.email)
+
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password",
         )
 
-    if not verify_password(
+    # Debug prints
+    print("--------------------------------")
+    print("Email:", user.email)
+    print("Entered Password:", user.password)
+    print("Stored Hash:", db_user.hashed_password)
+
+    password_match = verify_password(
         user.password,
         db_user.hashed_password,
-    ):
+    )
+
+    print("Password Match:", password_match)
+    print("--------------------------------")
+
+    if not password_match:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password",

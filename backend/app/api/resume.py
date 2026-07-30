@@ -1,7 +1,14 @@
 import os
+import uuid
 import shutil
 
-from fastapi import APIRouter, UploadFile, File, Depends, HTTPException
+from fastapi import (
+    APIRouter,
+    UploadFile,
+    File,
+    Depends,
+    HTTPException,
+)
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
@@ -14,7 +21,7 @@ from app.services.resume_parser import extract_resume_text
 
 router = APIRouter(
     prefix="/resume",
-    tags=["Resume"]
+    tags=["Resume"],
 )
 
 UPLOAD_FOLDER = "uploads/resumes"
@@ -26,6 +33,10 @@ async def upload_resume(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    """
+    Upload a resume, extract its text,
+    and save it in the database.
+    """
 
     # Allow only PDF and DOCX files
     allowed_extensions = [".pdf", ".docx"]
@@ -35,30 +46,41 @@ async def upload_resume(
     if extension not in allowed_extensions:
         raise HTTPException(
             status_code=400,
-            detail="Only PDF and DOCX files are allowed."
+            detail="Only PDF and DOCX files are allowed.",
         )
 
-    # Create upload directory
-    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+    # Create upload folder if it doesn't exist
+    os.makedirs(
+        UPLOAD_FOLDER,
+        exist_ok=True,
+    )
+
+    # Generate unique filename
+    unique_filename = f"{uuid.uuid4()}{extension}"
 
     filepath = os.path.join(
         UPLOAD_FOLDER,
-        file.filename
+        unique_filename,
     )
 
     # Save uploaded file
     with open(filepath, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+        shutil.copyfileobj(
+            file.file,
+            buffer,
+        )
 
-    # Extract text from resume
-    extracted_text = extract_resume_text(filepath)
+    # Extract resume text
+    extracted_text = extract_resume_text(
+        filepath
+    )
 
-    # Save details to database
+    # Save to database
     new_resume = Resume(
-        filename=file.filename,
-        filepath=filepath,
+        filename=file.filename,          # Original filename
+        filepath=filepath,               # Saved file path
         extracted_text=extracted_text,
-        user_id=current_user.id
+        user_id=current_user.id,
     )
 
     db.add(new_resume)
@@ -68,5 +90,6 @@ async def upload_resume(
     return {
         "message": "Resume uploaded successfully!",
         "resume_id": new_resume.id,
-        "filename": new_resume.filename
+        "filename": new_resume.filename,
+        "filepath": new_resume.filepath,
     }
