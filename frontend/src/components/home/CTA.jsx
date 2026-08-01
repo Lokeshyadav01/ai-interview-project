@@ -1,34 +1,27 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 
 function CTA() {
   return (
-    <section className="py-24 bg-blue-600">
+    <section className="bg-blue-600 text-white py-20">
+      <div className="max-w-5xl mx-auto text-center px-6">
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        className="max-w-5xl mx-auto text-center px-8"
-      >
-
-        <h2 className="text-5xl font-bold text-white">
+        <h2 className="text-4xl font-bold mb-6">
           Ready to Improve Your Resume?
         </h2>
 
-        <p className="text-blue-100 mt-6 text-xl">
-          Upload your resume and receive instant AI-powered feedback.
+        <p className="text-lg text-blue-100 mb-10">
+          Get instant ATS feedback and AI-powered suggestions
+          to increase your chances of landing interviews.
         </p>
 
         <Link
           to="/upload"
-          className="inline-block mt-10 bg-white text-blue-600 font-bold px-8 py-4 rounded-xl hover:scale-105 transition"
+          className="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition"
         >
           Analyze My Resume
         </Link>
 
-      </motion.div>
-
+      </div>
     </section>
   );
 }

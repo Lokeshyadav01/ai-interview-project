@@ -6,6 +6,7 @@ import SkillProgress from "../components/SkillProgress";
 
 function AnalysisResult() {
   const result = JSON.parse(localStorage.getItem("analysisResult"));
+  const navigate = useNavigate();
 
   console.log(result);
 
@@ -26,17 +27,28 @@ function AnalysisResult() {
 
         {/* Header */}
 
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+<div className="bg-white rounded-2xl shadow-lg p-8 mb-8 flex justify-between items-center">
 
-          <h1 className="text-4xl font-bold">
-            AI Resume Analysis
-          </h1>
+  <div>
 
-          <p className="text-gray-500 mt-2">
-            Complete ATS Report & AI Resume Feedback
-          </p>
+    <h1 className="text-4xl font-bold">
+      AI Resume Analysis
+    </h1>
 
-        </div>
+    <p className="text-gray-500 mt-2">
+      Complete ATS Report & AI Resume Feedback
+    </p>
+
+  </div>
+
+  <button
+    onClick={() => window.print()}
+    className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700"
+  >
+    📄 Download Report
+  </button>
+
+</div>
 
         {/* Score + Stats */}
 
@@ -328,6 +340,25 @@ function AnalysisResult() {
             </ReactMarkdown>
 
           </div>
+
+        </div>
+                {/* Action Buttons */}
+
+        <div className="flex justify-center gap-5 mt-10">
+
+          <button
+            onClick={() => navigate("/upload")}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold"
+          >
+            Analyze Another Resume
+          </button>
+
+          <button
+            onClick={() => window.print()}
+            className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold"
+          >
+            Download Report
+          </button>
 
         </div>
 

@@ -1,72 +1,67 @@
-import { motion } from "framer-motion";
-
-const steps = [
-  {
-    number: "01",
-    title: "Upload Resume",
-    description:
-      "Upload your PDF or DOCX resume securely.",
-  },
-  {
-    number: "02",
-    title: "Paste Job Description",
-    description:
-      "Provide the job description you want to target.",
-  },
-  {
-    number: "03",
-    title: "Get AI Analysis",
-    description:
-      "Receive ATS score, skill analysis, and AI feedback instantly.",
-  },
-];
-
 function HowItWorks() {
+  const steps = [
+    {
+      number: "01",
+      title: "Upload Resume",
+      description:
+        "Upload your PDF or DOCX resume in seconds.",
+    },
+    {
+      number: "02",
+      title: "Paste Job Description",
+      description:
+        "Paste the job description you want to apply for.",
+    },
+    {
+      number: "03",
+      title: "AI Analysis",
+      description:
+        "Our AI analyzes your resume against the job requirements.",
+    },
+    {
+      number: "04",
+      title: "Improve & Apply",
+      description:
+        "Get ATS score, missing skills, and actionable suggestions.",
+    },
+  ];
+
   return (
-    <section className="py-24 bg-white">
+    <section className="py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-6">
 
-      <div className="max-w-6xl mx-auto px-8">
+        <h2 className="text-4xl font-bold text-center mb-4">
+          How It Works
+        </h2>
 
-        <div className="text-center mb-16">
+        <p className="text-center text-gray-500 mb-16">
+          Analyze your resume in just four simple steps.
+        </p>
 
-          <h2 className="text-4xl font-bold">
-            How It Works
-          </h2>
-
-          <p className="text-gray-500 mt-4">
-            Analyze your resume in just three simple steps.
-          </p>
-
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-10">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
 
           {steps.map((step) => (
-            <motion.div
+            <div
               key={step.number}
-              whileHover={{ scale: 1.05 }}
-              className="bg-slate-50 rounded-2xl p-8 shadow-md text-center"
+              className="text-center bg-slate-50 rounded-2xl p-8 shadow-md"
             >
-
-              <div className="text-5xl font-extrabold text-blue-600 mb-6">
+              <div className="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl font-bold mx-auto mb-6">
                 {step.number}
               </div>
 
-              <h3 className="text-2xl font-bold mb-4">
+              <h3 className="text-xl font-bold mb-3">
                 {step.title}
               </h3>
 
-              <p className="text-gray-500">
+              <p className="text-gray-600">
                 {step.description}
               </p>
-
-            </motion.div>
+            </div>
           ))}
 
         </div>
 
       </div>
-
     </section>
   );
 }

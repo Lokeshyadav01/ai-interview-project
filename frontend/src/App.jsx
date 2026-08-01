@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -11,33 +11,22 @@ import NotFound from "./pages/NotFound";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
+    <Routes>
+      <Route path="/" element={<Home />} />
 
-        {/* Landing Page */}
-        <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
 
-        {/* Authentication */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+      <Route path="/upload" element={<UploadResume />} />
 
-        {/* Resume Upload */}
-        <Route path="/upload" element={<UploadResume />} />
+      <Route path="/analysis" element={<AnalysisResult />} />
 
-        {/* Analysis */}
-        <Route path="/analysis" element={<AnalysisResult />} />
+      <Route path="/dashboard" element={<Dashboard />} />
 
-        {/* Dashboard */}
-        <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/history" element={<History />} />
 
-        {/* History */}
-        <Route path="/history" element={<History />} />
-
-        {/* 404 */}
-        <Route path="*" element={<NotFound />} />
-
-      </Routes>
-    </BrowserRouter>
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 
