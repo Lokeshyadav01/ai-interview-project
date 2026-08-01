@@ -1,63 +1,43 @@
-import { Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
 import UploadResume from "./pages/UploadResume";
-import History from "./pages/History";
 import AnalysisResult from "./pages/AnalysisResult";
+import Dashboard from "./pages/Dashboard";
+import History from "./pages/History";
 import NotFound from "./pages/NotFound";
-
-import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={<Login />} />
+    <BrowserRouter>
+      <Routes>
 
-      <Route path="/register" element={<Register />} />
+        {/* Landing Page */}
+        <Route path="/" element={<Home />} />
 
-      {/* Protected Routes */}
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
+        {/* Authentication */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-      <Route
-        path="/upload"
-        element={
-          <ProtectedRoute>
-            <UploadResume />
-          </ProtectedRoute>
-        }
-      />
+        {/* Resume Upload */}
+        <Route path="/upload" element={<UploadResume />} />
 
-      <Route
-        path="/history"
-        element={
-          <ProtectedRoute>
-            <History />
-          </ProtectedRoute>
-        }
-      />
+        {/* Analysis */}
+        <Route path="/analysis" element={<AnalysisResult />} />
 
-      <Route
-        path="/analysis"
-        element={
-          <ProtectedRoute>
-            <AnalysisResult />
-          </ProtectedRoute>
-        }
-      />
+        {/* Dashboard */}
+        <Route path="/dashboard" element={<Dashboard />} />
 
-      {/* 404 */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        {/* History */}
+        <Route path="/history" element={<History />} />
+
+        {/* 404 */}
+        <Route path="*" element={<NotFound />} />
+
+      </Routes>
+    </BrowserRouter>
   );
 }
 

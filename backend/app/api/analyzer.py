@@ -13,7 +13,6 @@ from fastapi import (
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
-
 from app.models.resume import Resume
 from app.models.user import User
 
@@ -43,11 +42,13 @@ async def analyze_resume_endpoint(
     db: Session = Depends(get_db),
 ):
     """
-    Upload a resume, compare it with a job description,
-    generate ATS score, AI feedback, and save everything.
+    Upload resume and perform complete AI analysis.
     """
 
-    # Validate file type
+    # ---------------------------------
+    # Validate File
+    # ---------------------------------
+
     allowed_extensions = [".pdf", ".docx"]
 
     extension = os.path.splitext(
@@ -57,38 +58,49 @@ async def analyze_resume_endpoint(
     if extension not in allowed_extensions:
         raise HTTPException(
             status_code=400,
-            detail="Only PDF and DOCX files are allowed.",
+            detail="Only PDF and DOCX files are allowed."
         )
 
-    # Create uploads folder
+    # ---------------------------------
+    # Create Upload Folder
+    # ---------------------------------
+
     os.makedirs(
         UPLOAD_FOLDER,
-        exist_ok=True,
+        exist_ok=True
     )
 
-    # Generate unique filename
     unique_filename = (
         f"{uuid.uuid4()}{extension}"
     )
 
     filepath = os.path.join(
         UPLOAD_FOLDER,
-        unique_filename,
+        unique_filename
     )
 
-    # Save uploaded file
+    # ---------------------------------
+    # Save Resume
+    # ---------------------------------
+
     with open(filepath, "wb") as buffer:
         shutil.copyfileobj(
             resume.file,
-            buffer,
+            buffer
         )
 
-    # Extract text from resume
+    # ---------------------------------
+    # Extract Resume Text
+    # ---------------------------------
+
     resume_text = extract_resume_text(
         filepath
     )
 
-    # Save resume in database
+    # ---------------------------------
+    # Save Resume in Database
+    # ---------------------------------
+
     resume_db = Resume(
         filename=resume.filename,
         filepath=filepath,
@@ -100,29 +112,44 @@ async def analyze_resume_endpoint(
     db.commit()
     db.refresh(resume_db)
 
-    # ATS Matching
+    # ---------------------------------
+    # ATS Skill Matching
+    # ---------------------------------
+
     ats_result = match_job_description(
         resume_text,
         job_description,
     )
 
-    # Rule-Based Resume Analysis
+    # ---------------------------------
+    # AI Resume Analysis
+    # ---------------------------------
+
     ai_result = analyze_resume(
         resume_text
     )
 
+    # ---------------------------------
     # Feedback Generator
+    # ---------------------------------
+
     feedback = generate_feedback(
         ats_result
     )
 
+    # ---------------------------------
     # Gemini AI Review
+    # ---------------------------------
+
     ai_review = review_resume(
         resume_text,
         job_description,
     )
 
-    # Save analysis
+    # ---------------------------------
+    # Save Analysis History
+    # ---------------------------------
+
     save_analysis(
         db=db,
         user_id=current_user.id,
@@ -131,25 +158,43 @@ async def analyze_resume_endpoint(
         ai_feedback=ai_review,
     )
 
-    # Final API Response
+    # ---------------------------------
+    # Final Response
+    # ---------------------------------
+
     return {
+
         "success": True,
+
         "filename": resume.filename,
+
         "resume_id": resume_db.id,
 
+        # ATS
         "ats_score": ats_result["ats_score"],
+        
+        "category_scores": ats_result["category_scores"],
 
         "matched_skills": ats_result["matched_skills"],
 
         "missing_skills": ats_result["missing_skills"],
 
-        "feedback": feedback,
-
+        # Statistics
         "word_count": ai_result["word_count"],
 
         "sections_found": ai_result["sections_found"],
 
+        # Resume Analysis
+        "strengths": ai_result["strengths"],
+
+        "weaknesses": ai_result["weaknesses"],
+
         "resume_suggestions": ai_result["suggestions"],
 
+        # Feedback
+        "feedback": feedback,
+
+        # Gemini
         "gemini_review": ai_review,
+
     }

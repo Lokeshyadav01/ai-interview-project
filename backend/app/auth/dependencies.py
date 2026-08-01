@@ -20,14 +20,30 @@ def get_current_user(
     Returns the currently logged-in user.
     """
 
+    print("\n========== CURRENT USER ==========")
+    print("Raw Token:")
+    print(token)
+    print("==================================")
+
     payload = verify_access_token(token)
 
+    print("Payload Returned:")
+    print(payload)
+
+    if payload is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or Expired Token"
+        )
+
     user_id = payload.get("sub")
+
+    print("User ID:", user_id)
 
     if user_id is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token",
+            detail="Token missing user id"
         )
 
     user = (
@@ -36,10 +52,14 @@ def get_current_user(
         .first()
     )
 
-    if not user:
+    print("Database User:", user)
+
+    if user is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="User not found",
+            detail="User not found"
         )
+
+    print("========== USER VERIFIED ==========\n")
 
     return user

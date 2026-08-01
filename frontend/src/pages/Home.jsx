@@ -1,42 +1,26 @@
-import { Link } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/layout/Navbar";
+import Hero from "../components/home/Hero";
+import Features from "../components/home/Features";
+import HowItWorks from "../components/home/HowItWorks";
+import CTA from "../components/home/CTA";
+import Footer from "../components/layout/Footer";
 
-export default function Home() {
+function Home() {
   return (
     <>
       <Navbar />
 
-      <div
-        style={{
-          textAlign: "center",
-          marginTop: "80px",
-        }}
-      >
-        <h1>🚀 AI Interview Coach</h1>
+      <Hero />
 
-        <h3>
-          Practice Interviews, Analyze Resume,
-          <br />
-          Improve ATS Score using AI
-        </h3>
+      <Features />
 
-        <div
-          style={{
-            marginTop: "40px",
-            display: "flex",
-            justifyContent: "center",
-            gap: "20px",
-          }}
-        >
-          <Link to="/register">
-            <button>Get Started</button>
-          </Link>
+      <HowItWorks />
 
-          <Link to="/login">
-            <button>Login</button>
-          </Link>
-        </div>
-      </div>
+      <CTA />
+
+      <Footer />
     </>
   );
 }
+
+export default Home;
